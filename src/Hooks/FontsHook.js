@@ -4,9 +4,9 @@ import { useFonts } from "expo-font";
 
 export function useFontAndSplash() {
   const [fontsLoaded] = useFonts({
-    "Lato-Re": require("./assets/fonts/Lato-Regular.ttf"),
-    SEA: require("./assets/fonts/SEASRN__.ttf"),
-    Italic: require("./assets/fonts/LeagueGothic-Italic.otf"),
+    "Lato-Re": require("../assets/fonts/Lato-Regular.ttf"),
+    SEA: require("../assets/fonts/SEASRN__.ttf"),
+    Italic: require("../assets/fonts/LeagueGothic-Italic.otf"),
   });
 
   const onLayoutRootView = useCallback(async () => {

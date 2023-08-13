@@ -1,16 +1,17 @@
 import React, { useCallback, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
-import FontHook from "./src/Hooks/FontsHook";
+import { StatusBar, StyleSheet, View } from "react-native";
+import { useFontAndSplash } from "./src/Hooks/FontsHook";
 import MyStack from "./src/Navigation";
 
 export default function App() {
-  const { fontsLoaded, onLayoutRootView } = FontHook();
+  const { fontsLoaded, onLayoutRootView } = useFontAndSplash();
   if (!fontsLoaded) {
     return null;
   }
 
   return (
     <>
+      <StatusBar backgroundColor="black" translucent={true} />
       <MyStack />
     </>
   );

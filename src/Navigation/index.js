@@ -25,6 +25,7 @@ function MyTabs() {
           shadowOffset: { width: 0, height: 2 },
           shadowColor: "#456",
           elevation: 3,
+          backgroundColor: "#000000",
         },
       }}
     >
