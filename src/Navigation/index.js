@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Favorites, HomeScreen, ProfileScreen } from "../screens/index";
+import { Favorites, HomeScreen, Login, ProfileScreen } from "../screens/index";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -68,8 +68,12 @@ const Stack = createNativeStackNavigator();
 function MyStack() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName="Login"
+      >
         <Stack.Screen name="tabs" component={MyTabs} />
+        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
   );
