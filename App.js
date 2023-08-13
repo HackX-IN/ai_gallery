@@ -12,6 +12,7 @@ export default function App() {
   return (
     <>
       <StatusBar backgroundColor="black" translucent={true} />
+
       <MyStack />
     </>
   );

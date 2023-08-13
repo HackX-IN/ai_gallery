@@ -13,21 +13,39 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { Ai } from "../API";
 import * as FileSystem from "expo-file-system";
 import { useFontAndSplash } from "../Hooks/FontsHook";
 import * as MediaLibrary from "expo-media-library";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomeScreen = () => {
+  useEffect(() => {
+    const loadSavedItems = async () => {
+      try {
+        const savedItemsData = await AsyncStorage.getItem("savedItems");
+        if (savedItemsData) {
+          const parsedSavedItems = JSON.parse(savedItemsData);
+          setSavedItems(parsedSavedItems);
+        }
+      } catch (error) {
+        console.error("Error loading saved items:", error);
+      }
+    };
+
+    loadSavedItems();
+  }, []);
+
   const { fontsLoaded, onLayoutRootView } = useFontAndSplash();
   const [query, setQuery] = useState("");
   const [imageSources, setImageSources] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImageUri, setSelectedImageUri] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [savedItems, setSavedItems] = useState([]);
 
   if (!fontsLoaded) {
     return null;
@@ -83,6 +101,29 @@ const HomeScreen = () => {
     setModalVisible(true);
   };
 
+  const handleSaveItem = async () => {
+    try {
+      const isSaved = savedItems.includes(selectedImageUri);
+      let newSavedItems;
+
+      if (isSaved) {
+        newSavedItems = savedItems.filter((item) => item !== selectedImageUri);
+        Alert.alert(
+          "Item Removed",
+          "Image has been removed from your favorites."
+        );
+      } else {
+        newSavedItems = [...savedItems, selectedImageUri];
+        Alert.alert("Item Saved", "Image has been saved to your favorites.");
+      }
+
+      setSavedItems(newSavedItems);
+      await AsyncStorage.setItem("savedItems", JSON.stringify(newSavedItems));
+    } catch (error) {
+      console.error("Error saving/removing item:", error);
+    }
+  };
+
   return (
     <ImageBackground
       style={styles.container}
@@ -90,7 +131,7 @@ const HomeScreen = () => {
     >
       <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Create your Image"
+          placeholder="Search For AI Image"
           style={styles.input}
           value={query}
           onChangeText={(text) => setQuery(text)}
@@ -130,9 +171,9 @@ const HomeScreen = () => {
             contentContainerStyle={styles.flatListContainer}
             numColumns={2}
             renderItem={({ item }) => (
-              <Pressable onLongPress={() => handleImageLongPress(item)}>
+              <TouchableOpacity onLongPress={() => handleImageLongPress(item)}>
                 <Image source={{ uri: item }} style={styles.image} />
-              </Pressable>
+              </TouchableOpacity>
             )}
           />
         )}
@@ -149,9 +190,14 @@ const HomeScreen = () => {
             <Pressable style={styles.button} onPress={handleDownload}>
               <Ionicons name="cloud-download-outline" size={24} color="white" />
             </Pressable>
-            <Pressable style={styles.button}>
-              <Ionicons name="heart-outline" size={24} color="white" />
+            <Pressable style={styles.button} onPress={handleSaveItem}>
+              {savedItems.includes(selectedImageUri) ? (
+                <Ionicons name="heart" size={24} color="red" />
+              ) : (
+                <Ionicons name="heart-outline" size={24} color="white" />
+              )}
             </Pressable>
+
             <Pressable
               style={styles.button}
               onPress={() => setModalVisible(false)}
