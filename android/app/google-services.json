@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "873240861094",
+    "project_id": "artiverse-286b4",
+    "storage_bucket": "artiverse-286b4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873240861094:android:07deb477af3d166abb5767",
+        "android_client_info": {
+          "package_name": "com.inam786.ai_gallery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "873240861094-hp78erfbqjddo42a00ko5a74c2sj3ojj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inam786.ai_gallery",
+            "certificate_hash": "11fff6443b58bf1dd5c09c6ddf1bfd2b858d4144"
+          }
+        },
+        {
+          "client_id": "873240861094-93ihilpfhl9colm1mi39ciarala1pjh7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9cG9Amw5_3U2mowLi2x5TeBPEg9lJpwg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "873240861094-93ihilpfhl9colm1mi39ciarala1pjh7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

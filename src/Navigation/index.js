@@ -1,16 +1,20 @@
+import React, { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Favorites, HomeScreen, Login, ProfileScreen } from "../screens/index";
-
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import auth from "@react-native-firebase/auth";
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 function MyTabs() {
+  const navigation = useNavigation();
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={{
+      screenOptions={({ route }) => ({
         tabBarActiveTintColor: "#e91e63",
         headerShown: false,
         tabBarStyle: {
@@ -27,7 +31,7 @@ function MyTabs() {
           elevation: 3,
           backgroundColor: "#000000",
         },
-      }}
+      })}
     >
       <Tab.Screen
         name="Home"
@@ -63,14 +67,12 @@ function MyTabs() {
   );
 }
 
-const Stack = createNativeStackNavigator();
-
 function MyStack() {
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName="Login"
+        initialRouteName={"Login"}
       >
         <Stack.Screen name="tabs" component={MyTabs} />
         <Stack.Screen name="Login" component={Login} />
