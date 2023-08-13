@@ -11,6 +11,7 @@ import {
   Pressable,
   Alert,
   RefreshControl,
+  Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,12 +19,13 @@ import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+const { width } = Dimensions.get("window");
 const Favorites = () => {
   const [savedItems, setSavedItems] = useState([]);
   const [selectedImageUri, setSelectedImageUri] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
     const loadSavedItems = async () => {
       try {
@@ -192,8 +194,8 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: width * 0.48,
+    height: width * 0.48,
     margin: 5,
   },
   modalContent: {

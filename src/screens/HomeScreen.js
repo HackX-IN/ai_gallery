@@ -12,6 +12,7 @@ import {
   Modal,
   ScrollView,
   Alert,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,7 +22,7 @@ import * as FileSystem from "expo-file-system";
 import { useFontAndSplash } from "../Hooks/FontsHook";
 import * as MediaLibrary from "expo-media-library";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+const { width } = Dimensions.get("window");
 const HomeScreen = () => {
   useEffect(() => {
     const loadSavedItems = async () => {
@@ -236,10 +237,11 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     gap: 5,
+    paddingVertical: 60,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: width * 0.48,
+    height: width * 0.48,
     margin: 5,
   },
   modalContent: {
