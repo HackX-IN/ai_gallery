@@ -1,7 +1,9 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Modal, Text, TouchableOpacity, View, StyleSheet } from "react-native";
 
 const SubscriptionModal = ({ visible, onClose, onSubscribe }) => {
+  const navigation = useNavigation();
   if (!visible) {
     return null;
   }

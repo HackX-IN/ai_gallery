@@ -13,6 +13,7 @@ import {
   ScrollView,
   Alert,
   Dimensions,
+  Keyboard,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,7 +25,33 @@ import * as MediaLibrary from "expo-media-library";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SubscriptionModal from "../components/SubcriptionModal";
 const { width } = Dimensions.get("window");
-const HomeScreen = () => {
+import { usePayment } from "../Hooks/Payment";
+const HomeScreen = ({ navigation }) => {
+  const { paymentId, setPaymentId } = usePayment();
+
+  useEffect(() => {
+    const getPayment = async () => {
+      const storedPaymentId = await AsyncStorage.getItem("paymentId");
+      if (storedPaymentId) {
+        setPaymentId(storedPaymentId);
+      }
+    };
+    getPayment();
+  }, []);
+  const checkSubscriptionStatus = async () => {
+    try {
+      if (paymentId === null) {
+        setShowSubscriptionModal(true);
+      } else {
+        setShowSubscriptionModal(false);
+      }
+    } catch (error) {
+      console.error("Error checking subscription status:", error);
+    }
+  };
+  useEffect(() => {
+    checkSubscriptionStatus();
+  }, [paymentId]);
   useEffect(() => {
     const loadSavedItems = async () => {
       try {
@@ -39,7 +66,6 @@ const HomeScreen = () => {
     };
 
     loadSavedItems();
-    setShowSubscriptionModal(true);
   }, []);
 
   const { fontsLoaded, onLayoutRootView } = useFontAndSplash();
@@ -51,23 +77,6 @@ const HomeScreen = () => {
   const [savedItems, setSavedItems] = useState([]);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
-  useEffect(() => {
-    const checkSubscriptionStatus = async () => {
-      try {
-        const subscriptionStatus = await AsyncStorage.getItem(
-          "subscriptionStatus"
-        );
-        if (subscriptionStatus !== "seen") {
-          setShowSubscriptionModal(true);
-        }
-      } catch (error) {
-        console.error("Error checking subscription status:", error);
-      }
-    };
-
-    checkSubscriptionStatus();
-  }, []);
-
   if (!fontsLoaded) {
     return null;
   }
@@ -78,6 +87,7 @@ const HomeScreen = () => {
       const images = response.data.images;
       const srcList = images.map((image) => image.src);
       setImageSources(srcList);
+      Keyboard.dismiss();
     } catch (error) {
       console.log("Got Error ", error);
     } finally {
@@ -147,7 +157,14 @@ const HomeScreen = () => {
   const handleSubscriptionResponse = async (response) => {
     try {
       await AsyncStorage.setItem("subscriptionStatus", response);
-      setShowSubscriptionModal(false);
+      console.log(response);
+
+      if (response === "seen") {
+        setShowSubscriptionModal(false);
+      } else {
+        setShowSubscriptionModal(false);
+        navigation.navigate("Subs");
+      }
     } catch (error) {
       console.error("Error setting subscription status:", error);
     }
@@ -185,6 +202,7 @@ const HomeScreen = () => {
                   fontWeight: "800",
                 }}
               >{`Showing Search Result : ${query}`}</Text>
+              s
               <Pressable onPress={HandleClear}>
                 <Text className="text-white text-md mb-2">Clear</Text>
               </Pressable>
@@ -192,7 +210,14 @@ const HomeScreen = () => {
           )}
         </View>
         {imageSources.length > 0 && (
-          <View style={{ borderWidth: 1, borderColor: "black", top: 22 }} />
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: "black",
+              top: 22,
+              position: "absoulte",
+            }}
+          />
         )}
         {isLoading ? (
           <ActivityIndicator size="large" color="white" />

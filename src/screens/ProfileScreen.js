@@ -7,16 +7,29 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useFontAndSplash } from "../Hooks/FontsHook";
 import auth from "@react-native-firebase/auth";
 import { Pressable } from "react-native";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { usePayment } from "../Hooks/Payment";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const ProfileScreen = ({ navigation }) => {
   const { fontsLoaded, onLayoutRootView } = useFontAndSplash();
   const { width } = Dimensions.get("window");
   const user = auth().currentUser; // Get the current user
-
+  const { paymentId, setPaymentId } = usePayment();
+  console.log(paymentId);
+  useEffect(() => {
+    const getpayment = async () => {
+      await AsyncStorage.getItem("paymentId").then((storedPaymentId) => {
+        if (storedPaymentId) {
+          setPaymentId(storedPaymentId);
+        }
+      });
+    };
+    getpayment();
+  }, []);
   const signOut = async () => {
     try {
       await auth().signOut();
@@ -39,15 +52,31 @@ const ProfileScreen = ({ navigation }) => {
         className="flex-1 justify-center items-center  "
         onLayout={onLayoutRootView}
       >
-        <ImageBackground
-          source={require("../assets/images/crown1.png")}
-          style={{
-            width: width * 0.5,
-            height: width * 0.4,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        {paymentId ? (
+          <ImageBackground
+            source={require("../assets/images/crown1.png")}
+            style={{
+              width: width * 0.5,
+              height: width * 0.4,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={{ uri: user?.photoURL }} // Use the user's photo URL
+              style={{
+                width: width * 0.25,
+                height: width * 0.26,
+                borderRadius: 70,
+                resizeMode: "cover",
+                borderColor: "gold",
+                borderWidth: 1,
+                justifyContent: "center",
+                marginTop: 18,
+              }}
+            />
+          </ImageBackground>
+        ) : (
           <Image
             source={{ uri: user?.photoURL }} // Use the user's photo URL
             style={{
@@ -61,7 +90,7 @@ const ProfileScreen = ({ navigation }) => {
               marginTop: 18,
             }}
           />
-        </ImageBackground>
+        )}
 
         <Text
           className="text-lg text-center text-white font-bold p-2"
@@ -69,10 +98,23 @@ const ProfileScreen = ({ navigation }) => {
         >
           {user?.displayName} {/* Display the user's name */}
         </Text>
-        <Pressable className="p-2 w-30 flex-row justify-center items-center space-x-2 bg-yellow-400 rounded-2xl mb-3">
-          <Text className="text-md text-black font-semibold">Buy Now</Text>
-          <FontAwesome5 name="crown" size={20} color="white" />
-        </Pressable>
+        {paymentId ? (
+          <Pressable
+            className="p-2 w-30 flex-row justify-center items-center space-x-2 bg-yellow-400 rounded-2xl mb-3"
+            onPress={() => navigation.navigate("Subs")}
+          >
+            <Text className="text-md text-white font-bold">Pro</Text>
+            <FontAwesome5 name="crown" size={20} color="white" />
+          </Pressable>
+        ) : (
+          <Pressable
+            className="p-2 w-30 flex-row justify-center items-center space-x-2 bg-yellow-400 rounded-2xl mb-3"
+            onPress={() => navigation.navigate("Subs")}
+          >
+            <Text className="text-md text-black font-semibold">Buy Now</Text>
+            <FontAwesome5 name="crown" size={20} color="white" />
+          </Pressable>
+        )}
         <TouchableOpacity
           className=" w-28 bg-red-600 items-center rounded-3xl"
           onPress={() => signOut()}

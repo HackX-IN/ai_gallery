@@ -5,6 +5,8 @@ import { Favorites, HomeScreen, Login, ProfileScreen } from "../screens/index";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import auth from "@react-native-firebase/auth";
+import SubscriptionPage from "../screens/Subscriptionpage";
+// import { PaymentProvider } from "../Hooks/Payment";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -76,6 +78,7 @@ function MyStack() {
       >
         <Stack.Screen name="tabs" component={MyTabs} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Subs" component={SubscriptionPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

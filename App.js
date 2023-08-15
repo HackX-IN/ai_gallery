@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
 import { useFontAndSplash } from "./src/Hooks/FontsHook";
 import MyStack from "./src/Navigation";
+import { PaymentProvider } from "./src/Hooks/Payment";
 
 export default function App() {
   const { fontsLoaded, onLayoutRootView } = useFontAndSplash();
@@ -12,8 +13,9 @@ export default function App() {
   return (
     <>
       <StatusBar backgroundColor="black" translucent={true} />
-
-      <MyStack />
+      <PaymentProvider>
+        <MyStack />
+      </PaymentProvider>
     </>
   );
 }
