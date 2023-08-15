@@ -72,7 +72,7 @@ function MyStack() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName={"tabs"}
+        initialRouteName={"Login"}
       >
         <Stack.Screen name="tabs" component={MyTabs} />
         <Stack.Screen name="Login" component={Login} />

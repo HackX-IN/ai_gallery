@@ -16,27 +16,28 @@ import { ActivityIndicator } from "react-native";
 const LoginScreen = ({ navigation }) => {
   const { width } = Dimensions.get("window");
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState(null); // Track user authentication state
 
   useEffect(() => {
-    const configureAndCheckAuth = async () => {
-      // Configure the apiClient first
-      await GoogleSignin.configure({
-        webClientId:
-          "873240861094-93ihilpfhl9colm1mi39ciarala1pjh7.apps.googleusercontent.com",
-        isLoggingEnabled: true,
-      });
-
-      const unsubscribe = auth().onAuthStateChanged((authUser) => {
-        setUser(authUser);
-        setIsLoading(false);
-      });
-
-      return () => unsubscribe();
-    };
-
     configureAndCheckAuth();
+    const unsubscribe = auth().onAuthStateChanged((authUser) => {
+      if (authUser) {
+        navigation.replace("tabs");
+        return null;
+      }
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
+
+  const configureAndCheckAuth = async () => {
+    // Configure the apiClient first
+    await GoogleSignin.configure({
+      webClientId:
+        "873240861094-93ihilpfhl9colm1mi39ciarala1pjh7.apps.googleusercontent.com",
+      isLoggingEnabled: true,
+    });
+  };
 
   const onGoogleButtonPress = async () => {
     setIsLoading(true);
@@ -55,11 +56,6 @@ const LoginScreen = ({ navigation }) => {
         <ActivityIndicator size={28} color="white" />
       </ImageBackground>
     );
-  }
-
-  if (user) {
-    navigation.replace("tabs");
-    return null;
   }
 
   return (
