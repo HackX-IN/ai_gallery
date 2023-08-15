@@ -22,6 +22,7 @@ import * as FileSystem from "expo-file-system";
 import { useFontAndSplash } from "../Hooks/FontsHook";
 import * as MediaLibrary from "expo-media-library";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SubscriptionModal from "../components/SubcriptionModal";
 const { width } = Dimensions.get("window");
 const HomeScreen = () => {
   useEffect(() => {
@@ -38,6 +39,7 @@ const HomeScreen = () => {
     };
 
     loadSavedItems();
+    setShowSubscriptionModal(true);
   }, []);
 
   const { fontsLoaded, onLayoutRootView } = useFontAndSplash();
@@ -47,6 +49,24 @@ const HomeScreen = () => {
   const [selectedImageUri, setSelectedImageUri] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [savedItems, setSavedItems] = useState([]);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+
+  useEffect(() => {
+    const checkSubscriptionStatus = async () => {
+      try {
+        const subscriptionStatus = await AsyncStorage.getItem(
+          "subscriptionStatus"
+        );
+        if (subscriptionStatus !== "seen") {
+          setShowSubscriptionModal(true);
+        }
+      } catch (error) {
+        console.error("Error checking subscription status:", error);
+      }
+    };
+
+    checkSubscriptionStatus();
+  }, []);
 
   if (!fontsLoaded) {
     return null;
@@ -122,6 +142,14 @@ const HomeScreen = () => {
       await AsyncStorage.setItem("savedItems", JSON.stringify(newSavedItems));
     } catch (error) {
       console.error("Error saving/removing item:", error);
+    }
+  };
+  const handleSubscriptionResponse = async (response) => {
+    try {
+      await AsyncStorage.setItem("subscriptionStatus", response);
+      setShowSubscriptionModal(false);
+    } catch (error) {
+      console.error("Error setting subscription status:", error);
     }
   };
 
@@ -223,6 +251,11 @@ const HomeScreen = () => {
           </View>
         </ScrollView>
       </Modal>
+      <SubscriptionModal
+        visible={showSubscriptionModal}
+        onClose={() => handleSubscriptionResponse("seen")}
+        onSubscribe={() => handleSubscriptionResponse("subscribed")}
+      />
     </ImageBackground>
   );
 };
