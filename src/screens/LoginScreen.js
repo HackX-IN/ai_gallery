@@ -11,41 +11,55 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
+import { ActivityIndicator } from "react-native";
 
 const LoginScreen = ({ navigation }) => {
-  useEffect(() => {
-    const unsubscribe = auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log(user);
-        navigation.replace("tabs");
-      } else {
-        navigation.replace("Login");
-      }
-    });
-
-    return () => unsubscribe(); // Cleanup function to unsubscribe when component unmounts
-  }, []); // Empty dependency array to ensure the effect runs only once
-
   const { width } = Dimensions.get("window");
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState(null); // Track user authentication state
 
-  GoogleSignin.configure({
-    webClientId:
-      "873240861094-93ihilpfhl9colm1mi39ciarala1pjh7.apps.googleusercontent.com",
-    isLoggingEnabled: true,
-  });
+  useEffect(() => {
+    const configureAndCheckAuth = async () => {
+      // Configure the apiClient first
+      await GoogleSignin.configure({
+        webClientId:
+          "873240861094-93ihilpfhl9colm1mi39ciarala1pjh7.apps.googleusercontent.com",
+        isLoggingEnabled: true,
+      });
 
-  async function onGoogleButtonPress() {
-    // Check if your device supports Google Play
+      const unsubscribe = auth().onAuthStateChanged((authUser) => {
+        setUser(authUser);
+        setIsLoading(false);
+      });
+
+      return () => unsubscribe();
+    };
+
+    configureAndCheckAuth();
+  }, []);
+
+  const onGoogleButtonPress = async () => {
+    setIsLoading(true);
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-    // Get the users ID token
     const { idToken } = await GoogleSignin.signIn();
-
-    // Create a Google credential with the token
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    await auth().signInWithCredential(googleCredential);
+  };
 
-    // Sign-in the user with the credential
-    return auth().signInWithCredential(googleCredential);
+  if (isLoading) {
+    return (
+      <ImageBackground
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        source={require("../assets/images/bg.png")}
+      >
+        <ActivityIndicator size={28} color="white" />
+      </ImageBackground>
+    );
+  }
+
+  if (user) {
+    navigation.replace("tabs");
+    return null;
   }
 
   return (

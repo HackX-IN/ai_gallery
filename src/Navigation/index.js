@@ -28,7 +28,7 @@ function MyTabs() {
           paddingVertical: 5,
           shadowOffset: { width: 0, height: 2 },
           shadowColor: "#456",
-          elevation: 3,
+          elevation: 5,
           backgroundColor: "#000000",
         },
       })}
@@ -72,7 +72,7 @@ function MyStack() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName={"Login"}
+        initialRouteName={"tabs"}
       >
         <Stack.Screen name="tabs" component={MyTabs} />
         <Stack.Screen name="Login" component={Login} />

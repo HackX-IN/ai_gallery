@@ -163,6 +163,9 @@ const HomeScreen = () => {
             </>
           )}
         </View>
+        {imageSources.length > 0 && (
+          <View style={{ borderWidth: 1, borderColor: "black", top: 22 }} />
+        )}
         {isLoading ? (
           <ActivityIndicator size="large" color="white" />
         ) : (
@@ -237,12 +240,13 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     gap: 5,
-    paddingVertical: 60,
+    paddingVertical: 40,
   },
   image: {
     width: width * 0.48,
-    height: width * 0.48,
+    height: width * 0.5,
     margin: 5,
+    resizeMode: "cover",
   },
   modalContent: {
     flex: 1,
