@@ -19,13 +19,14 @@ import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
 const { width } = Dimensions.get("window");
 const Favorites = () => {
   const [savedItems, setSavedItems] = useState([]);
   const [selectedImageUri, setSelectedImageUri] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
+  const isFocused = useIsFocused();
   useEffect(() => {
     const loadSavedItems = async () => {
       try {
@@ -38,9 +39,10 @@ const Favorites = () => {
         console.error("Error loading saved items:", error);
       }
     };
-
-    loadSavedItems();
-  }, []);
+    if (isFocused) {
+      loadSavedItems();
+    }
+  }, [isFocused]);
 
   const handleDownload = async () => {
     const filename = selectedImageUri.split("/").pop();
@@ -145,7 +147,7 @@ const Favorites = () => {
           }
           numColumns={2}
           renderItem={({ item }) => (
-            <TouchableOpacity onLongPress={() => handleImageLongPress(item)}>
+            <TouchableOpacity onPress={() => handleImageLongPress(item)}>
               <Image source={{ uri: item }} style={styles.image} />
             </TouchableOpacity>
           )}

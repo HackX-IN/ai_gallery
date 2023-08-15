@@ -175,11 +175,23 @@ const HomeScreen = () => {
             contentContainerStyle={styles.flatListContainer}
             numColumns={2}
             renderItem={({ item }) => (
-              <TouchableOpacity onLongPress={() => handleImageLongPress(item)}>
+              <Pressable onLongPress={() => handleImageLongPress(item)}>
                 <Image source={{ uri: item }} style={styles.image} />
-              </TouchableOpacity>
+              </Pressable>
             )}
           />
+        )}
+
+        {imageSources.length === 0 && query.length === 0 && (
+          <View className="flex-col justify-center items-center ">
+            <Image
+              source={require("../assets/images/searching.png")}
+              style={{
+                width: width * 0.48,
+                height: width * 0.5,
+              }}
+            />
+          </View>
         )}
       </View>
       <Modal
@@ -247,6 +259,7 @@ const styles = StyleSheet.create({
     height: width * 0.5,
     margin: 5,
     resizeMode: "cover",
+    borderRadius: 7,
   },
   modalContent: {
     flex: 1,
