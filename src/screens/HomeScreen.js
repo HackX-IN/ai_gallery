@@ -14,6 +14,7 @@ import {
   Alert,
   Dimensions,
   Keyboard,
+  ToastAndroid,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -139,13 +140,16 @@ const HomeScreen = ({ navigation }) => {
 
       if (isSaved) {
         newSavedItems = savedItems.filter((item) => item !== selectedImageUri);
-        Alert.alert(
-          "Item Removed",
-          "Image has been removed from your favorites."
+        ToastAndroid.show(
+          "Image has been removed from your favorites.",
+          ToastAndroid.SHORT
         );
       } else {
         newSavedItems = [...savedItems, selectedImageUri];
-        Alert.alert("Item Saved", "Image has been saved to your favorites.");
+        ToastAndroid.show(
+          "Image has been saved to your favorites.",
+          ToastAndroid.SHORT
+        );
       }
 
       setSavedItems(newSavedItems);
@@ -182,8 +186,15 @@ const HomeScreen = ({ navigation }) => {
           value={query}
           onChangeText={(text) => setQuery(text)}
         />
-        <TouchableOpacity onPress={() => HandlegetImages()}>
-          <Ionicons name="search" color="gray" size={25} />
+        <TouchableOpacity
+          disabled={query.length === 0}
+          onPress={HandlegetImages}
+        >
+          <Ionicons
+            name="search"
+            color={query.length === 0 ? "gray" : "red"}
+            size={25}
+          />
         </TouchableOpacity>
       </View>
 
@@ -228,7 +239,7 @@ const HomeScreen = ({ navigation }) => {
             contentContainerStyle={styles.flatListContainer}
             numColumns={2}
             renderItem={({ item }) => (
-              <Pressable onLongPress={() => handleImageLongPress(item)}>
+              <Pressable onPress={() => handleImageLongPress(item)}>
                 <Image source={{ uri: item }} style={styles.image} />
               </Pressable>
             )}
@@ -326,8 +337,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.7)",
   },
   modalImage: {
-    width: 300,
-    height: 300,
+    width: width * 0.6,
+    height: width * 0.6,
     margin: 10,
   },
   buttonContainer: {

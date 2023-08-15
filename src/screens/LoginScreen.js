@@ -15,16 +15,16 @@ import { ActivityIndicator } from "react-native";
 
 const LoginScreen = ({ navigation }) => {
   const { width } = Dimensions.get("window");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     configureAndCheckAuth();
     const unsubscribe = auth().onAuthStateChanged((authUser) => {
       if (authUser) {
         navigation.replace("tabs");
-        return null;
+      } else {
+        setIsLoading(false); // Set loading to false when user authentication status is determined
       }
-      setIsLoading(false);
     });
 
     return () => unsubscribe();
