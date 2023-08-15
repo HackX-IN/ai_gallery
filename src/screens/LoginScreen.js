@@ -23,8 +23,9 @@ const LoginScreen = ({ navigation }) => {
       }
     });
 
-    return unsubscribe;
-  }, [navigation]);
+    return () => unsubscribe(); // Cleanup function to unsubscribe when component unmounts
+  }, []); // Empty dependency array to ensure the effect runs only once
+
   const { width } = Dimensions.get("window");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -34,35 +35,18 @@ const LoginScreen = ({ navigation }) => {
     isLoggingEnabled: true,
   });
 
-  const GoogleLogin = async () => {
-    try {
-      await GoogleSignin.hasPlayServices({
-        showPlayServicesUpdateDialog: true,
-      });
+  async function onGoogleButtonPress() {
+    // Check if your device supports Google Play
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+    // Get the users ID token
+    const { idToken } = await GoogleSignin.signIn();
 
-      const { idToken } = await GoogleSignin.signIn();
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-      try {
-        setIsLoading(true);
-        const userCredential = await auth().signInWithCredential(
-          googleCredential
-        );
-
-        if (userCredential && userCredential.user) {
-          navigation.replace("tabs");
-        } else {
-          console.log("User sign-in failed.");
-        }
-      } catch (error) {
-        console.error("Error signing in:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.error("Google Sign-In Error:", error);
-    }
-  };
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(googleCredential);
+  }
 
   return (
     <ImageBackground
@@ -75,7 +59,7 @@ const LoginScreen = ({ navigation }) => {
           style={{ width: width * 0.17, height: width * 0.17 }}
         />
         <Text style={styles.text}>ArtiVerse</Text>
-        <Pressable style={styles.button} onPress={GoogleLogin}>
+        <Pressable style={styles.button} onPress={onGoogleButtonPress}>
           <Ionicons name="logo-google" size={22} color="#FFFC31" />
           <Text style={styles.buttonText}>Sign-in with Google</Text>
         </Pressable>
