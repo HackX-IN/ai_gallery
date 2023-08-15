@@ -202,7 +202,7 @@ const HomeScreen = ({ navigation }) => {
                   fontWeight: "800",
                 }}
               >{`Showing Search Result : ${query}`}</Text>
-              s
+
               <Pressable onPress={HandleClear}>
                 <Text className="text-white text-md mb-2">Clear</Text>
               </Pressable>
