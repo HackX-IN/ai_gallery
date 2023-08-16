@@ -3,6 +3,8 @@ import { StatusBar, StyleSheet, View } from "react-native";
 import { useFontAndSplash } from "./src/Hooks/FontsHook";
 import MyStack from "./src/Navigation";
 import { PaymentProvider } from "./src/Hooks/Payment";
+import auth from "@react-native-firebase/auth";
+import { useNavigation } from "@react-navigation/native";
 
 export default function App() {
   const { fontsLoaded, onLayoutRootView } = useFontAndSplash();

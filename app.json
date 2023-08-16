@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#5F23B9"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -23,7 +25,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "permissions": ["CAMERA_ROLL", "WRITE_EXTERNAL_STORAGE"]
+        "permissions": [
+          "CAMERA_ROLL",
+          "WRITE_EXTERNAL_STORAGE"
+        ]
       },
       "permissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
@@ -42,6 +47,11 @@
           "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "234ffa69-5e04-4065-8bd2-ae306556fe1b"
+      }
+    }
   }
 }

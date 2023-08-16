@@ -15,23 +15,22 @@ import { ActivityIndicator } from "react-native";
 
 const LoginScreen = ({ navigation }) => {
   const { width } = Dimensions.get("window");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     configureAndCheckAuth();
-    const unsubscribe = auth().onAuthStateChanged((authUser) => {
-      if (authUser) {
-        navigation.replace("tabs");
-      } else {
-        setIsLoading(false); // Set loading to false when user authentication status is determined
-      }
-    });
-
-    return () => unsubscribe();
+    checkCurrentUser();
   }, []);
+  const checkCurrentUser = async () => {
+    const user = auth().currentUser;
+    if (user) {
+      navigation.replace("tabs");
+    } else {
+      setIsLoading(false);
+    }
+  };
 
   const configureAndCheckAuth = async () => {
-    // Configure the apiClient first
     await GoogleSignin.configure({
       webClientId:
         "873240861094-93ihilpfhl9colm1mi39ciarala1pjh7.apps.googleusercontent.com",
@@ -44,7 +43,13 @@ const LoginScreen = ({ navigation }) => {
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
     const { idToken } = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    await auth().signInWithCredential(googleCredential);
+    await auth()
+      .signInWithCredential(googleCredential)
+      .then((user) => {
+        console.log(user);
+        navigation.replace("tabs");
+        setIsLoading(false);
+      });
   };
 
   if (isLoading) {

@@ -11,8 +11,6 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function MyTabs() {
-  const navigation = useNavigation();
-
   return (
     <Tab.Navigator
       initialRouteName="Home"
