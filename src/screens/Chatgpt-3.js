@@ -99,11 +99,12 @@ const Chatgpt3 = ({ navigation, route }) => {
         source={require("../assets/images/bg.png")}
       >
         <View
-          className="top-12 rounded-xl px-2 z-40"
+          className="top-12 rounded-xl px-2 z-40  "
           style={{
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
+            marginBottom: 10,
           }}
         >
           <TouchableOpacity
