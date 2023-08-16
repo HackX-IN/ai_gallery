@@ -6,6 +6,7 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import auth from "@react-native-firebase/auth";
 import SubscriptionPage from "../screens/Subscriptionpage";
+import Chatgpt3 from "../screens/Chatgpt-3";
 // import { PaymentProvider } from "../Hooks/Payment";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -77,6 +78,7 @@ function MyStack() {
         <Stack.Screen name="tabs" component={MyTabs} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Subs" component={SubscriptionPage} />
+        <Stack.Screen name="Gpt3" component={Chatgpt3} />
       </Stack.Navigator>
     </NavigationContainer>
   );

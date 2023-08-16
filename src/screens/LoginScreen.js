@@ -33,7 +33,7 @@ const LoginScreen = ({ navigation }) => {
   const configureAndCheckAuth = async () => {
     await GoogleSignin.configure({
       webClientId:
-        "GOOGLE_CLIENT_ID",
+        "873240861094-93ihilpfhl9colm1mi39ciarala1pjh7.apps.googleusercontent.com",
       isLoggingEnabled: true,
     });
   };

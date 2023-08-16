@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import RazorpayCheckout from "react-native-razorpay";
 import { usePayment } from "../Hooks/Payment";
@@ -45,12 +46,12 @@ const FeatureCard = ({ title, description, icon, price }) => {
   const { paymentId, setPaymentId } = usePayment();
   const handlePayment = (price) => {
     var options = {
-      description: "Credits towards consultation",
+      description: "Turns Imaginary to Reality",
       image: "https://i.imgur.com/3g7nmJC.jpg",
       currency: "INR",
-      key: "Your_Razorpay_Key",
+      key: "rzp_test_wb5X8MvZuy14EK",
       amount: price * 100, // Convert price to paise (1 INR = 100 paise)
-      name: "Acme Corp",
+      name: "ArtiVerse",
       order_id: "", // Replace this with an order_id created using Orders API.
       prefill: {
         email: "XX+XXX@example.com",
@@ -71,7 +72,10 @@ const FeatureCard = ({ title, description, icon, price }) => {
       })
       .catch((error) => {
         // handle failure
-        alert(`Error: ${error.code} | ${error.description}`);
+        ToastAndroid.show(
+          "Transaction Failed, Please try again.",
+          ToastAndroid.SHORT
+        );
       });
   };
   return (

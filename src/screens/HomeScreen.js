@@ -15,9 +15,10 @@ import {
   Dimensions,
   Keyboard,
   ToastAndroid,
+  TouchableWithoutFeedback,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useCallback, useEffect, useState } from "react";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { Ai } from "../API";
 import * as FileSystem from "expo-file-system";
@@ -27,7 +28,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SubscriptionModal from "../components/SubcriptionModal";
 const { width } = Dimensions.get("window");
 import { usePayment } from "../Hooks/Payment";
-const HomeScreen = ({ navigation }) => {
+
+const HomeScreen = ({ navigation, route }) => {
   const { paymentId, setPaymentId } = usePayment();
 
   useEffect(() => {
@@ -179,119 +181,154 @@ const HomeScreen = ({ navigation }) => {
       style={styles.container}
       source={require("../assets/images/bg.png")}
     >
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Search For AI Image"
-          style={styles.input}
-          value={query}
-          onChangeText={(text) => setQuery(text)}
-        />
+      <View
+        className="top-12 rounded-xl px-2 z-40"
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <TouchableOpacity
-          disabled={query.length === 0}
-          onPress={HandlegetImages}
+          onPress={() => navigation.navigate("Gpt3")}
+          className="justify-center items-center w-35 p-2 rounded-xl px-4 "
         >
-          <Ionicons
-            name="search"
-            color={query.length === 0 ? "gray" : "red"}
-            size={25}
-          />
+          <Text
+            className="text-white text-lg "
+            style={{
+              color: route.name === "Gpt3" ? "black" : "white",
+            }}
+          >
+            GPT-3
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Home")}
+          className="justify-center items-center w-35 p-2 rounded-xl ml-2 $"
+        >
+          <Text
+            className="text-white text-lg "
+            style={{
+              color: route.name === "Home" ? "red" : "white",
+            }}
+          >
+            GPT-3.5
+          </Text>
         </TouchableOpacity>
       </View>
+      <>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Search For AI Image"
+            style={styles.input}
+            value={query}
+            onChangeText={(text) => setQuery(text)}
+          />
+          <TouchableOpacity
+            disabled={query.length === 0}
+            onPress={HandlegetImages}
+          >
+            <Ionicons
+              name="search"
+              color={query.length === 0 ? "gray" : "red"}
+              size={25}
+            />
+          </TouchableOpacity>
+        </View>
 
-      {/* Display the fetched image source URLs in a FlatList */}
-      <View className="top-60 -mt-20" onLayout={onLayoutRootView}>
-        <View className="justify-between items-center flex-row px-2 ">
-          {imageSources.length > 0 && (
-            <>
-              <Text
+        {/* Display the fetched image source URLs in a FlatList */}
+        <View className="top-60 -mt-20" onLayout={onLayoutRootView}>
+          <View className="justify-between items-center flex-row px-2 -mt-10 ">
+            {imageSources.length > 0 && (
+              <>
+                <Text
+                  style={{
+                    fontSize: 17,
+                    fontFamily: "Lato-Re",
+                    paddingLeft: 10,
+                    color: "white",
+                    marginBottom: 10,
+                    fontWeight: "800",
+                  }}
+                >{`Showing Search Result : ${query}`}</Text>
+
+                <Pressable onPress={HandleClear}>
+                  <Text className="text-white text-md mb-2">Clear</Text>
+                </Pressable>
+              </>
+            )}
+          </View>
+
+          {isLoading ? (
+            <ActivityIndicator size="large" color="white" />
+          ) : (
+            <FlatList
+              data={imageSources}
+              keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={styles.flatListContainer}
+              numColumns={2}
+              renderItem={({ item }) => (
+                <Pressable onPress={() => handleImageLongPress(item)}>
+                  <Image source={{ uri: item }} style={styles.image} />
+                </Pressable>
+              )}
+            />
+          )}
+
+          {imageSources.length === 0 && query.length === 0 && (
+            <View className="flex-col justify-center items-center ">
+              <Image
+                source={require("../assets/images/searching.png")}
                 style={{
-                  fontSize: 17,
-                  fontFamily: "Lato-Re",
-                  paddingLeft: 10,
-                  color: "white",
-                  marginBottom: 10,
-                  fontWeight: "800",
+                  width: width * 0.48,
+                  height: width * 0.5,
                 }}
-              >{`Showing Search Result : ${query}`}</Text>
-
-              <Pressable onPress={HandleClear}>
-                <Text className="text-white text-md mb-2">Clear</Text>
-              </Pressable>
-            </>
+              />
+            </View>
           )}
         </View>
-        {imageSources.length > 0 && (
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: "black",
-              top: 22,
-              position: "absoulte",
-            }}
-          />
-        )}
-        {isLoading ? (
-          <ActivityIndicator size="large" color="white" />
-        ) : (
-          <FlatList
-            data={imageSources}
-            keyExtractor={(item, index) => index.toString()}
-            contentContainerStyle={styles.flatListContainer}
-            numColumns={2}
-            renderItem={({ item }) => (
-              <Pressable onPress={() => handleImageLongPress(item)}>
-                <Image source={{ uri: item }} style={styles.image} />
-              </Pressable>
-            )}
-          />
-        )}
-
-        {imageSources.length === 0 && query.length === 0 && (
-          <View className="flex-col justify-center items-center ">
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <ScrollView contentContainerStyle={styles.modalContent}>
             <Image
-              source={require("../assets/images/searching.png")}
-              style={{
-                width: width * 0.48,
-                height: width * 0.5,
-              }}
+              source={{ uri: selectedImageUri }}
+              style={styles.modalImage}
             />
-          </View>
-        )}
-      </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <ScrollView contentContainerStyle={styles.modalContent}>
-          <Image source={{ uri: selectedImageUri }} style={styles.modalImage} />
-          <View style={styles.buttonContainer}>
-            <Pressable style={styles.button} onPress={handleDownload}>
-              <Ionicons name="cloud-download-outline" size={24} color="white" />
-            </Pressable>
-            <Pressable style={styles.button} onPress={handleSaveItem}>
-              {savedItems.includes(selectedImageUri) ? (
-                <Ionicons name="heart" size={24} color="red" />
-              ) : (
-                <Ionicons name="heart-outline" size={24} color="white" />
-              )}
-            </Pressable>
+            <View style={styles.buttonContainer}>
+              <Pressable style={styles.button} onPress={handleDownload}>
+                <Ionicons
+                  name="cloud-download-outline"
+                  size={24}
+                  color="white"
+                />
+              </Pressable>
+              <Pressable style={styles.button} onPress={handleSaveItem}>
+                {savedItems.includes(selectedImageUri) ? (
+                  <Ionicons name="heart" size={24} color="red" />
+                ) : (
+                  <Ionicons name="heart-outline" size={24} color="white" />
+                )}
+              </Pressable>
 
-            <Pressable
-              style={styles.button}
-              onPress={() => setModalVisible(false)}
-            >
-              <Ionicons name="close-outline" size={24} color="white" />
-            </Pressable>
-          </View>
-        </ScrollView>
-      </Modal>
-      <SubscriptionModal
-        visible={showSubscriptionModal}
-        onClose={() => handleSubscriptionResponse("seen")}
-        onSubscribe={() => handleSubscriptionResponse("subscribed")}
-      />
+              <Pressable
+                style={styles.button}
+                onPress={() => setModalVisible(false)}
+              >
+                <Ionicons name="close-outline" size={24} color="white" />
+              </Pressable>
+            </View>
+          </ScrollView>
+        </Modal>
+        <SubscriptionModal
+          visible={showSubscriptionModal}
+          onClose={() => handleSubscriptionResponse("seen")}
+          onSubscribe={() => handleSubscriptionResponse("subscribed")}
+        />
+      </>
     </ImageBackground>
   );
 };
@@ -306,7 +343,7 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "white",
     position: "absolute",
-    top: 70,
+    top: 95,
     left: 5,
     borderRadius: 20,
     alignItems: "center",
@@ -321,7 +358,7 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     gap: 5,
-    paddingVertical: 40,
+    paddingVertical: 10,
   },
   image: {
     width: width * 0.48,
