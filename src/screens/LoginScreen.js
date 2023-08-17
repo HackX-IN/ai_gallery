@@ -74,7 +74,7 @@ const LoginScreen = ({ navigation }) => {
           source={require("../assets/images/woman.png")}
           style={{ width: width * 0.17, height: width * 0.17 }}
         />
-        <Animated.Text style={styles.text}>Welcome to VirtuIntel</Animated.Text>
+        <Text style={styles.text}>Welcome to VirtuIntel</Text>
         <Pressable style={styles.button} onPress={onGoogleButtonPress}>
           <Ionicons name="logo-google" size={22} color="#FFFC31" />
           <Text style={styles.buttonText}>Sign-in with Google</Text>
