@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
@@ -73,7 +74,7 @@ const LoginScreen = ({ navigation }) => {
           source={require("../assets/images/woman.png")}
           style={{ width: width * 0.17, height: width * 0.17 }}
         />
-        <Text style={styles.text}>ArtiVerse</Text>
+        <Animated.Text style={styles.text}>Welcome to VirtuIntel</Animated.Text>
         <Pressable style={styles.button} onPress={onGoogleButtonPress}>
           <Ionicons name="logo-google" size={22} color="#FFFC31" />
           <Text style={styles.buttonText}>Sign-in with Google</Text>

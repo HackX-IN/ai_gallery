@@ -18,7 +18,12 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import {
+  FontAwesome,
+  Fontisto,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import axios from "axios";
 import { Ai } from "../API";
 import * as FileSystem from "expo-file-system";
@@ -182,37 +187,49 @@ const HomeScreen = ({ navigation, route }) => {
       source={require("../assets/images/bg.png")}
     >
       <View
-        className="top-12 rounded-xl px-2 z-40"
+        className="top-9  px-2 z-40"
         style={{
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
+          backgroundColor: "black",
+          paddingVertical: 4,
         }}
       >
         <TouchableOpacity
-          onPress={() => navigation.navigate("Gpt3")}
-          className="justify-center items-center w-35 p-2 rounded-xl px-4 "
-        >
-          <Text
-            className="text-white text-lg "
-            style={{
-              color: route.name === "Gpt3" ? "black" : "white",
-            }}
-          >
-            GPT-3
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
           onPress={() => navigation.navigate("Home")}
-          className="justify-center items-center w-35 p-2 rounded-xl ml-2 $"
+          className="justify-center items-center w-35 p-2 rounded-xl px-4  flex-row"
         >
+          <Fontisto
+            name="star"
+            size={16}
+            color={route.name === "Home" ? "red" : "white"}
+          />
           <Text
-            className="text-white text-lg "
+            className="text-white text-lg ml-1 "
             style={{
               color: route.name === "Home" ? "red" : "white",
             }}
           >
             GPT-3.5
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Gpt3")}
+          className="justify-center items-center w-35 p-2 rounded-xl ml-2 flex-row"
+        >
+          <MaterialCommunityIcons
+            name="solar-power"
+            size={24}
+            color={route.name === "Gpt3" ? "red" : "white"}
+          />
+          <Text
+            className="text-white text-lg ml-1"
+            style={{
+              color: route.name === "Gpt3" ? "red" : "white",
+            }}
+          >
+            GPT-3
           </Text>
         </TouchableOpacity>
       </View>
@@ -274,19 +291,18 @@ const HomeScreen = ({ navigation, route }) => {
               )}
             />
           )}
-
-          {imageSources.length === 0 && query.length === 0 && (
-            <View className="flex-col justify-center items-center ">
-              <Image
-                source={require("../assets/images/searching.png")}
-                style={{
-                  width: width * 0.48,
-                  height: width * 0.5,
-                }}
-              />
-            </View>
-          )}
         </View>
+        {imageSources.length === 0 && query.length === 0 && (
+          <View className="flex-col justify-center items-center absolute top-80 left-23 w-[100%] ">
+            <Image
+              source={require("../assets/images/searching.png")}
+              style={{
+                width: width * 0.48,
+                height: width * 0.5,
+              }}
+            />
+          </View>
+        )}
         <Modal
           animationType="slide"
           transparent={true}
@@ -343,7 +359,7 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "white",
     position: "absolute",
-    top: 95,
+    top: 98,
     left: 5,
     borderRadius: 20,
     alignItems: "center",
@@ -359,6 +375,7 @@ const styles = StyleSheet.create({
   flatListContainer: {
     gap: 5,
     paddingVertical: 10,
+    paddingBottom: "80%",
   },
   image: {
     width: width * 0.48,
