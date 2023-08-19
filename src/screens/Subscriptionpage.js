@@ -49,7 +49,7 @@ const FeatureCard = ({ title, description, icon, price }) => {
       description: "Turns Imaginary to Reality",
       image: "https://i.imgur.com/3g7nmJC.jpg",
       currency: "INR",
-      key: "rzp_test_wb5X8MvZuy14EK",
+      key: Your_Razorpay_key,
       amount: price * 100, // Convert price to paise (1 INR = 100 paise)
       name: "ArtiVerse",
       order_id: "", // Replace this with an order_id created using Orders API.
